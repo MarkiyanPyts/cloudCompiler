@@ -25,7 +25,7 @@ switch (userArgs[0]) {
         }     
     break;
     case "compile":
-        helpers.cloudCompile(exec, config.repoDir, config.gitPushRemote, config.gitPushBranch);
+        helpers.cloudCompile(exec, config);
     break;
     case "watch":
 

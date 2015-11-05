@@ -40,16 +40,17 @@ module.exports = {
             console.error("You do not have access to this config value or it does not exist");
         }
     },
-    cloudCompile: function(exec, repoDir, gitPushRemote, gitPushBranch) {
-        exec("git add -A", {cwd: repoDir}, function (error, stdout, stderr) {
+    cloudCompile: function(exec, config) {
+        var that = this;
+        exec("git add -A", {cwd: config.repoDir}, function (error, stdout, stderr) {
             if (error === null) {
-                exec("git commit -m \"cloud compiler process\"", {cwd: repoDir}, function (error, stdout, stderr) {
+                exec("git commit -m \"cloud compiler process\"", {cwd: config.repoDir}, function (error, stdout, stderr) {
                     if (error === null) {
                         console.log('commit success: ' + stdout);
-                        exec("git push " + gitPushRemote + " " + gitPushBranch, {cwd: repoDir}, function (error, stdout, stderr) {
+                        exec("git push " + config.gitPushRemote + " " + config.gitPushBranch, {cwd: config.repoDir}, function (error, stdout, stderr) {
                             if (error === null) {
                                 console.log(stdout);
-                                console.log("git push made, waiting for server to compile");
+                                that.requestToServer(config, callback);
                             }else {
                                 console.log('error: ' + error);
                             }
@@ -62,5 +63,21 @@ module.exports = {
                 console.log('error: ' + error);
             }
         });
+    },
+    requestToServer: function(config, callback) {
+        console.log("git push made, waiting for server to respond");
+        /*return http.post({
+            host: config.serverDomain,
+            path: '/compile'
+        }, function(response) {
+            var body = '';
+            response.on('data', function(d) {
+                body += d;
+            });
+            response.on('end', function() {
+                var parsed = JSON.parse(body);
+                callback();
+            });
+        });*/
     }
 }
