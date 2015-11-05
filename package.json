@@ -1,0 +1,33 @@
+{
+  "name": "cloud-compiler",
+  "version": "1.0.0",
+  "description": "App for executing gulp tasks on external machines",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "preferGlobal": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DarthMarcius/cloudCompiler.git"
+  },
+  "keywords": [
+    "cloud",
+    "compilation",
+    "gulp",
+    "grunt",
+    "sass"
+  ],
+  "author": "markiyan_pyts",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DarthMarcius/cloudCompiler/issues"
+  },
+  "homepage": "https://github.com/DarthMarcius/cloudCompiler#readme",
+  "bin": {
+    "clcomp": "app.js"
+  },
+  "dependencies": {
+    "gulp": "^3.9.0"
+  }
+}
