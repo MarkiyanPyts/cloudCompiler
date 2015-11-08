@@ -27,7 +27,5 @@
   "bin": {
     "clcomp": "app.js"
   },
-  "dependencies": {
-    "gulp": "^3.9.0"
-  }
+  "dependencies": {}
 }
