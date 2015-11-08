@@ -1,11 +1,9 @@
 #! /usr/bin/env node
 var configName= "./config.js";
 var config = require(configName);
-var http = require('http');
+
 //custom helpers
 var helpers = require("./helpers.js");
-
-var exec = require('child_process').exec;
 var userArgs = process.argv.slice(2);
 //config operations
 switch (userArgs[0]) {
@@ -25,7 +23,10 @@ switch (userArgs[0]) {
         }     
     break;
     case "compile":
-        helpers.cloudCompile(exec, config);
+        helpers.cloudCompile(config);
+    break;
+    case "init":
+        helpers.cloudInit(config);
     break;
     case "watch":
 
