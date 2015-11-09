@@ -16,7 +16,7 @@ switch (userArgs[0]) {
                 helpers.setConfig(userArgs, configName, config);
                 break;
             case "reset":
-                helpers.resetDefaultConfig();
+                helpers.resetDefaultConfig(configName);
                 break;
             default:
                 console.error("There is no operation like this for conf"); 

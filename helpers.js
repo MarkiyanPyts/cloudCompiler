@@ -5,13 +5,13 @@ module.exports = {
     editableConfigs: [
         "user",
         "password",
-        "domain",
         "repoDir",
         "serverCommands",
         "gitPushRemote",
         "gitPushBranch",
         "serverUrl",
-        "gitClonePath"
+        "gitClonePath",
+        "cloudCommands"
     ],
 
     configDefaults: {
@@ -20,11 +20,11 @@ module.exports = {
         "repoDir": "D:\\GoogleDrive\\OSF\\MyProjects\\Demandware\\Loreal\\LORA\\Urban Decay HK\\codebace\\ecom-lancome-au\\cartridges\\app_lancome_au\\cartridge\\static\\default",
         "gitPushRemote": "origin",
         "gitPushBranch": "master",
-        "serverUrl": "91.210.21.144",
+        "serverUrl": "localhost",
         "gitClonePath": "git@bitbucket.org:Markiyan_Pyts/testrepoforcompiler.git"
     },
 
-    resetDefaultConfig: function() {
+    resetDefaultConfig: function(configName) {
         fs.writeFile(configName, "module.exports = \n"+JSON.stringify(this.configDefaults, null, 4), function (err) {
             if (err) return console.log(err)
             console.log("default configs are set");
@@ -34,6 +34,7 @@ module.exports = {
     setConfig: function(userArgs, configName, config) {
         if(this.editableConfigs.indexOf(userArgs[2])  != -1) {
             config[userArgs[2]] = userArgs[3];
+            console.log("cName:"+configName)
             fs.writeFile(configName, "module.exports = \n"+JSON.stringify(config, null, 4), function (err) {
               if (err) return console.log(err)
               console.log(userArgs[2] + ' is set to to ' + userArgs[3]);
@@ -77,14 +78,17 @@ module.exports = {
     },
 
     cloudInit: function(config) {
-        this.initRequestToServer(config);
+        this.requestToServer(config, "/init");
     },
 
-    initRequestToServer: function(config) {
+    compileRequestToServer: function(config) {
+        this.requestToServer(config, "/compile");
+    },
+    requestToServer: function(config, requestPath) {
         console.log("git push made, waiting for server to respond");
         var options = {
             host: config.serverUrl,
-            path: '/init',
+            path: requestPath,
             port: '3000',
             method: 'POST',
             headers: {
@@ -93,35 +97,8 @@ module.exports = {
             }
         };
         var req = http.request(options, function(res) {
-            console.log('STATUS: ' + res.statusCode);
-            console.log('HEADERS: ' + JSON.stringify(res.headers));
-            //res.setEncoding('utf8');
-            res.on('data', function (chunk) {
-                console.log('BODY: ' + chunk);
-            });
-            res.on('end', function() {
-                console.log('No more data in response.')
-            })
-        });
-        req.write(JSON.stringify(config));
-        req.end();
-    },
-
-    compileRequestToServer: function(config, callback) {
-        console.log("git push made, waiting for server to respond");
-        var options = {
-            host: config.serverUrl,
-            path: '/compile',
-            port: '3000',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': Buffer.byteLength(JSON.stringify(config))
-            }
-        };
-        var req = http.request(options, function(res) {
-            console.log('STATUS: ' + res.statusCode);
-            console.log('HEADERS: ' + JSON.stringify(res.headers));
+            /*console.log('STATUS: ' + res.statusCode);
+            console.log('HEADERS: ' + JSON.stringify(res.headers));*/
             //res.setEncoding('utf8');
             res.on('data', function (chunk) {
                 console.log('BODY: ' + chunk);
