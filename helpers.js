@@ -1,6 +1,7 @@
 var fs = require('fs');
 var http = require('http');
 var exec = require('child_process').exec;
+var path = require('path');
 module.exports = {
     editableConfigs: [
         "user",
@@ -11,7 +12,8 @@ module.exports = {
         "gitPushBranch",
         "serverUrl",
         "gitClonePath",
-        "cloudCommands"
+        "cloudCommands",
+        "watchDir"
     ],
 
     configDefaults: {
@@ -20,9 +22,12 @@ module.exports = {
         "repoDir": "D:\\GoogleDrive\\OSF\\MyProjects\\Demandware\\Loreal\\LORA\\Urban Decay HK\\codebace\\ecom-lancome-au\\cartridges\\app_lancome_au\\cartridge\\static\\default",
         "gitPushRemote": "origin",
         "gitPushBranch": "master",
-        "serverUrl": "localhost",
-        "gitClonePath": "git@bitbucket.org:Markiyan_Pyts/testrepoforcompiler.git"
+        "serverUrl": "91.210.21.144",
+        "gitClonePath": "git@bitbucket.org:Markiyan_Pyts/testrepoforcompiler.git",
+        "cloudCommands": "gulp compass"
     },
+
+    serverLocked: false,
 
     resetDefaultConfig: function(configName) {
         fs.writeFile(configName, "module.exports = \n"+JSON.stringify(this.configDefaults, null, 4), function (err) {
@@ -50,6 +55,21 @@ module.exports = {
         }else {
             console.error("You do not have access to this config value or it does not exist");
         }
+    },
+
+    watch: function(config) {
+        var watchPath = path.normalize(config.watchDir),
+            that = this;
+        console.log("Watching " + watchPath +" for changes")
+        fs.watch(watchPath, { persistent: true, recursive: true }, function (event, filename) {
+            if(!that.serverLocked) {
+                that.cloudCompile(config);
+                that.serverLocked = true;
+                setTimeout(function() {
+                    that.serverLocked = false;
+                }, 100)
+            }
+        });
     },
 
     cloudCompile: function(config) {
@@ -85,6 +105,7 @@ module.exports = {
         this.requestToServer(config, "/compile");
     },
     requestToServer: function(config, requestPath) {
+        var that = this;
         console.log("git push made, waiting for server to respond");
         var options = {
             host: config.serverUrl,
@@ -97,17 +118,27 @@ module.exports = {
             }
         };
         var req = http.request(options, function(res) {
-            /*console.log('STATUS: ' + res.statusCode);
-            console.log('HEADERS: ' + JSON.stringify(res.headers));*/
-            //res.setEncoding('utf8');
+            var response = "";
             res.on('data', function (chunk) {
-                console.log('BODY: ' + chunk);
+                response += chunk;
             });
             res.on('end', function() {
-                console.log('No more data in response.')
+                console.log(response)
+                if(response === "compiled data is pushed back successfully") {
+                    that.pullCompiledDataBack(config);
+                }
             })
         });
         req.write(JSON.stringify(config));
         req.end();
+    },
+    pullCompiledDataBack: function(config) {
+        exec("git pull " + config.gitPushRemote + " " + config.gitPushBranch, {cwd: config.repoDir}, function (error, stdout, stderr) {
+            if (error === null) {
+                console.log("compiled data is successfully pulled back to local repo");
+            }else {
+                console.log('error: ' + error);
+            }
+        });
     }
 }

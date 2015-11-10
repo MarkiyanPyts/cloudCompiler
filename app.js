@@ -25,12 +25,13 @@ switch (userArgs[0]) {
     case "compile":
         helpers.cloudCompile(config);
     break;
+    case "watch":
+        helpers.watch(config);
+    break;
     case "init":
         helpers.cloudInit(config);
     break;
-    case "watch":
 
-    break;
     default:
         console.log("Cloud Compiler does not support this command")
 }
