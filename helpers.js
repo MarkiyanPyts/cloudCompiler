@@ -13,7 +13,8 @@ module.exports = {
         "serverUrl",
         "gitClonePath",
         "cloudCommands",
-        "watchDir"
+        "watchDir",
+        "gitPassword"
     ],
 
     configDefaults: {
