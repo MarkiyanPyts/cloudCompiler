@@ -107,7 +107,7 @@ module.exports = {
     },
     requestToServer: function(config, requestPath) {
         var that = this;
-        console.log("git push made, waiting for server to respond");
+        console.log("waiting for server to respond");
         var options = {
             host: config.serverUrl,
             path: requestPath,
@@ -132,6 +132,9 @@ module.exports = {
         });
         req.write(JSON.stringify(config));
         req.end();
+    },
+    destroyUser: function(config) {
+        this.requestToServer(config, "/destroy");
     },
     pullCompiledDataBack: function(config) {
         exec("git pull " + config.gitPushRemote + " " + config.gitPushBranch, {cwd: config.repoDir}, function (error, stdout, stderr) {

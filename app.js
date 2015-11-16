@@ -15,7 +15,7 @@ switch (userArgs[0]) {
             case "set":
                 helpers.setConfig(userArgs, configName, config);
                 break;
-            case "reset":
+            case "resetConf":
                 helpers.resetDefaultConfig(configName);
                 break;
             default:
@@ -30,6 +30,9 @@ switch (userArgs[0]) {
     break;
     case "init":
         helpers.cloudInit(config);
+    break;
+    case "destroy":
+        helpers.destroyUser(config);
     break;
 
     default:
