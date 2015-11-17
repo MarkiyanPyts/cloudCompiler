@@ -1,5 +1,6 @@
 #! /usr/bin/env node
-var configName= "./config.js";
+var path = require("path");
+var configName= path.resolve(__dirname + "/config.js");
 var config = require(configName);
 
 //custom helpers

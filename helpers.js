@@ -11,6 +11,7 @@ module.exports = {
         "gitPushRemote",
         "gitPushBranch",
         "serverUrl",
+        "serverPort",
         "gitClonePath",
         "cloudCommands",
         "watchDir",
@@ -24,8 +25,11 @@ module.exports = {
         "gitPushRemote": "origin",
         "gitPushBranch": "master",
         "serverUrl": "91.210.21.144",
-        "gitClonePath": "git@bitbucket.org:Markiyan_Pyts/testrepoforcompiler.git",
-        "cloudCommands": "gulp compass"
+        "gitClonePath": "https://Markiyan_Pyts@bitbucket.org/Markiyan_Pyts/testrepoforcompiler.git",
+        "cloudCommands": "gulp compass",
+        "watchDir": "D:\\GoogleDrive\\OSF\\MyProjects\\Demandware\\Loreal\\LORA\\Urban Decay HK\\codebace\\ecom-lancome-au\\cartridges\\app_lancome_au\\cartridge\\static\\default\\sass",
+        "gitPassword": "tifind96",
+        "serverPort": "3000"
     },
 
     serverLocked: false,
@@ -40,7 +44,6 @@ module.exports = {
     setConfig: function(userArgs, configName, config) {
         if(this.editableConfigs.indexOf(userArgs[2])  != -1) {
             config[userArgs[2]] = userArgs[3];
-            console.log("cName:"+configName)
             fs.writeFile(configName, "module.exports = \n"+JSON.stringify(config, null, 4), function (err) {
               if (err) return console.log(err)
               console.log(userArgs[2] + ' is set to to ' + userArgs[3]);
@@ -111,7 +114,7 @@ module.exports = {
         var options = {
             host: config.serverUrl,
             path: requestPath,
-            port: '3000',
+            port: config.serverPort,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',

@@ -1,0 +1,2 @@
+#Cloud Compiler
+App is intended to execute custom command line commands(usually compilation related) inside your git repository on external machine which is doing all the work and pushing results back to same repo instance inside client machine.
