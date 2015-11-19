@@ -1,4 +1,4 @@
-#! /usr/bin/env node
+#!/usr/bin/env node
 var path = require("path");
 var configName= path.resolve(__dirname + "/config.js");
 var config = require(configName);
