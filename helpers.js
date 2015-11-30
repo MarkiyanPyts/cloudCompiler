@@ -2,6 +2,7 @@ var fs = require('fs');
 var http = require('http');
 var exec = require('child_process').exec;
 var path = require('path');
+var maxBuffer = 500 * 1024;
 module.exports = {
     editableConfigs: [
         "user",
@@ -78,12 +79,12 @@ module.exports = {
 
     cloudCompile: function(config) {
         var that = this;
-        exec("git add -A", {cwd: config.repoDir}, function (error, stdout, stderr) {
+        exec("git add -A", {cwd: config.repoDir, maxBuffer : maxBuffer}, function (error, stdout, stderr) {
             if (error === null) {
-                exec("git commit -m \"cloud compiler process\"", {cwd: config.repoDir}, function (error, stdout, stderr) {
+                exec("git commit -m \"cloud compiler process\"", {cwd: config.repoDir, maxBuffer : maxBuffer}, function (error, stdout, stderr) {
                     if (error === null) {
                         console.log('commit success: ' + stdout);
-                        exec("git push " + config.gitPushRemote + " " + config.gitPushBranch, {cwd: config.repoDir}, function (error, stdout, stderr) {
+                        exec("git push " + config.gitPushRemote + " " + config.gitPushBranch, {cwd: config.repoDir, maxBuffer : maxBuffer}, function (error, stdout, stderr) {
                             if (error === null) {
                                 console.log(stdout);
                                 that.compileRequestToServer(config, function() {});
@@ -147,7 +148,7 @@ module.exports = {
         this.requestToServer(config, "/destroy");
     },
     pullCompiledDataBack: function(config, callback) {
-        exec("git pull " + config.gitPushRemote + " " + config.gitPushBranch, {cwd: config.repoDir}, function (error, stdout, stderr) {
+        exec("git pull " + config.gitPushRemote + " " + config.gitPushBranch, {cwd: config.repoDir, maxBuffer : maxBuffer}, function (error, stdout, stderr) {
             if (error === null) {
                 console.log("compiled data is successfully pulled back to local repo");
                 callback();
