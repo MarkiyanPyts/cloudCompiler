@@ -109,7 +109,10 @@ module.exports = {
         this.requestToServer(config, "/compile");
     },
     requestToServer: function(config, requestPath) {
-        var that = this;
+        var that = this,
+            beforeRequest = new Date(),
+            afterRequest,
+            successTime;
         console.log("waiting for server to respond");
         var options = {
             host: config.serverIP,
@@ -129,7 +132,11 @@ module.exports = {
             res.on('end', function() {
                 console.log(response)
                 if(response === "compiled data is pushed back successfully") {
-                    that.pullCompiledDataBack(config);
+                    that.pullCompiledDataBack(config, function() {
+                        afterRequest = new Date();
+                        successTime = afterRequest - beforeRequest;
+                        console.log("compilation time is: ", successTime);
+                    });
                 }
             })
         });
@@ -139,10 +146,11 @@ module.exports = {
     destroyUser: function(config) {
         this.requestToServer(config, "/destroy");
     },
-    pullCompiledDataBack: function(config) {
+    pullCompiledDataBack: function(config, callback) {
         exec("git pull " + config.gitPushRemote + " " + config.gitPushBranch, {cwd: config.repoDir}, function (error, stdout, stderr) {
             if (error === null) {
                 console.log("compiled data is successfully pulled back to local repo");
+                callback();
             }else {
                 console.log('error: ' + error);
             }
