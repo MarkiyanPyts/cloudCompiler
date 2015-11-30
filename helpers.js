@@ -135,7 +135,7 @@ module.exports = {
                     that.pullCompiledDataBack(config, function() {
                         afterRequest = new Date();
                         successTime = afterRequest - beforeRequest;
-                        console.log("compilation time is: ", successTime);
+                        console.log("compilation time is: ", successTime / 1000 + " sec");
                     });
                 }
             })
