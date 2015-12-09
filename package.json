@@ -27,5 +27,7 @@
   "bin": {
     "clcomp": "./app.js"
   },
-  "dependencies": {}
+  "dependencies": {
+    "node-watch": "^0.3.4"
+  }
 }

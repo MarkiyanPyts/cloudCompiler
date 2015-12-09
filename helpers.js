@@ -2,6 +2,7 @@ var fs = require('fs');
 var http = require('http');
 var exec = require('child_process').exec;
 var path = require('path');
+var watch = require('node-watch');
 var maxBuffer = 500 * 1024;
 module.exports = {
     editableConfigs: [
@@ -15,8 +16,7 @@ module.exports = {
         "serverPort",
         "gitClonePath",
         "cloudCommands",
-        "watchDir",
-        "gitPassword"
+        "watchDir"
     ],
 
     configDefaults: {
@@ -36,9 +36,13 @@ module.exports = {
     serverLocked: false,
 
     resetDefaultConfig: function(configName) {
-        fs.writeFile(configName, "module.exports = \n"+JSON.stringify(this.configDefaults, null, 4), function (err) {
+        var configDefaults = this.configDefaults;
+        fs.open(configName, "w", function(err, fd) {
             if (err) return console.log(err)
-            console.log("default configs are set");
+            fs.writeFile(configName, "module.exports = \n"+JSON.stringify(configDefaults, null, 4), function (err) {
+                if (err) return console.log(err);
+                console.log("clcfile.js now exists, default configs for your clcfile.js are set, please fill file with your data");
+            });
         });
     },
 
@@ -66,7 +70,7 @@ module.exports = {
         var watchPath = path.normalize(config.watchDir),
             that = this;
         console.log("Watching " + watchPath +" for changes")
-        fs.watch(watchPath, { persistent: true, recursive: true }, function (event, filename) {
+        watch(watchPath, function(filename) {
             if(!that.serverLocked) {
                 that.cloudCompile(config);
                 that.serverLocked = true;

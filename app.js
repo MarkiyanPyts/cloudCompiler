@@ -1,10 +1,28 @@
 #!/usr/bin/env node
 var path = require("path");
-var configName= path.resolve(__dirname + "/config.js");
-var config = require(configName);
+var fs = require('fs');
+// Set env var for ORIGINAL cwd
+// before anything touches it
+process.env.INIT_CWD = process.cwd();
+
+var configName= path.resolve(process.env.INIT_CWD + "/clcfile.js");
+
+var errorMessages = {
+    "noConfigFile": "clcfile.js does not exits in current directory, please create one"
+}
+
+try {
+    var config = require(configName);
+} catch(e) {
+    console.log(errorMessages.noConfigFile);
+}
+
+
+var dirString = process.cwd();
 
 //custom helpers
 var helpers = require("./helpers.js");
+
 var userArgs = process.argv.slice(2);
 //config operations
 switch (userArgs[0]) {
@@ -16,7 +34,7 @@ switch (userArgs[0]) {
             case "set":
                 helpers.setConfig(userArgs, configName, config);
                 break;
-            case "resetConf":
+            case "reset":
                 helpers.resetDefaultConfig(configName);
                 break;
             default:
