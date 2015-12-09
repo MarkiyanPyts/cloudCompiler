@@ -8,28 +8,24 @@ module.exports = {
     editableConfigs: [
         "user",
         "password",
-        "repoDir",
-        "serverCommands",
         "gitPushRemote",
         "gitPushBranch",
         "serverIP",
         "serverPort",
         "gitClonePath",
         "cloudCommands",
-        "watchDir"
+        "watchFor"
     ],
 
     configDefaults: {
         "user": "",
         "password": "",
-        "repoDir": "",
-        "watchDir": "",
+        "watchFor": "",
         "serverIP": "",
         "serverPort": "3000",
         "gitClonePath": "",
-        "gitPassword": "",
-        "gitPushRemote": "origin",
-        "gitPushBranch": "master",
+        "gitPushRemote": "",
+        "gitPushBranch": "",
         "cloudCommands": ""
     },
 
@@ -67,7 +63,7 @@ module.exports = {
     },
 
     watch: function(config) {
-        var watchPath = path.normalize(config.watchDir),
+        var watchPath = path.normalize(config.watchFor),
             watchPathSplit = watchPath.split(","),
             that = this;
         console.log("Watching " + watchPath +" for changes")

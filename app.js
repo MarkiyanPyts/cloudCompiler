@@ -13,12 +13,10 @@ var errorMessages = {
 
 try {
     var config = require(configName);
+    config.repoDir = process.env.INIT_CWD;
 } catch(e) {
     console.log(errorMessages.noConfigFile);
 }
-
-
-var dirString = process.cwd();
 
 //custom helpers
 var helpers = require("./helpers.js");
