@@ -28,6 +28,6 @@
     "clcomp": "./app.js"
   },
   "dependencies": {
-    "node-watch": "^0.3.4"
+    "watch-glob": "^0.1.3"
   }
 }

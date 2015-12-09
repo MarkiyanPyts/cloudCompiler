@@ -2,7 +2,7 @@ var fs = require('fs');
 var http = require('http');
 var exec = require('child_process').exec;
 var path = require('path');
-var watch = require('node-watch');
+var watchGlob = require('watch-glob');
 var maxBuffer = 500 * 1024;
 module.exports = {
     editableConfigs: [
@@ -68,9 +68,11 @@ module.exports = {
 
     watch: function(config) {
         var watchPath = path.normalize(config.watchDir),
+            watchPathSplit = watchPath.split(","),
             that = this;
         console.log("Watching " + watchPath +" for changes")
-        watch(watchPath, function(filename) {
+        watchGlob(watchPathSplit, { callbackArg: 'relative' }, function(filePath) {
+            console.log(filePath + " is modified");
             if(!that.serverLocked) {
                 that.cloudCompile(config);
                 that.serverLocked = true;
