@@ -24,8 +24,8 @@ module.exports = {
         "serverIP": "",
         "serverPort": "3000",
         "gitClonePath": "",
-        "gitPushRemote": "",
-        "gitPushBranch": "",
+        "gitPushRemote": "origin",
+        "gitPushBranch": "master",
         "cloudCommands": ""
     },
 
